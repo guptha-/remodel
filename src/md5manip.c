@@ -43,5 +43,12 @@ int md5CalcFileMD5 (char *fileName, char *hexDigest)
 }
 
 
-int md5CompareMD5 (char *MD5One, char *MD5Two);
+int md5CompareMD5 (char *MD5One, char *MD5Two)
+{
+	if (strncmp (MD5One, MD5Two, 16*2+1) == 0)
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
 
