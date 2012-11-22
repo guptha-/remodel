@@ -1,5 +1,5 @@
-#ifndef prot_DEFN
-#define prot_DEFN
+#ifndef defn_INCL
+#define defn_INCL
 
 #define FAILURE 0
 #define SUCCESS 1

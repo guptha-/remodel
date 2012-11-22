@@ -1,5 +1,5 @@
-#ifndef prot_INCL
-#define prot_INCL
+#ifndef incl_INCL
+#define incl_INCL
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,5 +7,6 @@
 #include "../inc/prot.h"
 #include "../inc/md5.h"
 #include "../inc/defn.h"
+#include "../inc/ds.h"
 
 #endif

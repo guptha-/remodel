@@ -10,6 +10,39 @@ void md5AppendPathToFileName (char *fileName, char *retFileName)
 	strcat (retFileName, fileName);
 }
 
+/* md5DetectFileModif finds out if the given file has been modified since
+ * last run of remodel and returns TRUE if modified. 
+ */
+int md5DetectFileModif (char *fileName)
+{
+	char *filePath = NULL;
+	char hexDigest[16*2+1];
+	char hexDigestNew[16*2+1];
+
+	filePath = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	memset (hexDigest, 0, 16*2+1);
+	memset (hexDigestNew, 0, 16*2+1);
+
+	md5AppendPathToFileName (fileName, filePath);
+
+	if (md5CalcFileMD5 (fileName, hexDigestNew) == FAILURE)
+	{
+		printf ("detectFileModif: Unable to calc file's MD5\n");
+		return TRUE;
+	}
+
+	if ((md5GetMD5FromFile (filePath, hexDigest) == FAILURE) ||
+		  (strlen (hexDigest) != 16*2) ||
+			(md5AreMD5sEqual (hexDigest, hexDigestNew) != TRUE))
+	{
+		/* It is a new/modified file */
+		return TRUE;
+	}
+
+	free (filePath);
+	return FALSE;
+}
+
 /* md5GetMD5FromFile gets the hexDigest from the given fileName. 
  * !! Make sure hexDigest has 16*2+1 bytes allocated */
 int md5GetMD5FromFile (char *fileName, char *hexDigest)
@@ -68,7 +101,7 @@ int md5FileToString (char *fileName, char **content, long *fileSize)
 	result = fread(*content, 1, *fileSize, fp);
 	if (result <= 0)
 	{
-		printf ("File is empty\n");
+		printf ("md5FileToString: File is empty\n");
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -91,7 +124,7 @@ int md5CalcFileMD5 (char *fileName, char *hexDigest)
 	}
 
 	md5_init(&state);
-	md5_append(&state, content, fileSize);
+	md5_append(&state, (const md5_byte_t *)content, fileSize);
 	md5_finish(&state, digest);
 
 	free (content);

@@ -1,6 +1,6 @@
 #ifndef prot_INCL
 #define prot_INCL
-
+#include "../inc/md5.h"
 /* Initialize the MD5 algorithm. */
 void md5_init(md5_state_t *pms);
 /* Append a string to the message. */

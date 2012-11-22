@@ -13,6 +13,7 @@ int processMakefileModif ()
 
 	filePath = malloc (strlen (fileName) + strlen (".remodel/") + 1);
 	memset (hexDigest, 0, 16*2+1);
+	memset (hexDigestNew, 0, 16*2+1);
 
 	md5AppendPathToFileName (fileName, filePath);
 
@@ -47,6 +48,7 @@ int processMakefileModif ()
 
 int main (int argc, char **argv)
 {
+	char *argument;
 	/* Check if makefile modified */
 	if (processMakefileModif () == FAILURE)
 	{
@@ -57,13 +59,17 @@ int main (int argc, char **argv)
 	
   if (argc == 2)
 	{
-		/* Find out parameter and load only the necessary production */
+		argument = (char *) malloc (sizeof(char) * strlen (argv[1]) + 1);
+		strncpy (argument, argv[1], sizeof(char) * strlen (argv[1]) + 1);
 	}
 	else
 	{
-		/* Load first production alone */
+		argument = (char *) malloc (sizeof(char) * strlen ("DEFAULT") + 1);
+		strcpy (argument, "DEFAULT");
   }
   /* Populate data structures with production information */
+
+	free (argument);
 
 	/* Compute and compare MD5s for all the productions' dependencies */
 	
