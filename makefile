@@ -10,7 +10,7 @@ OBJF = $(SRCF:.c=.o)
 SRCDIR = src
 OBJDIR = obj
 INCDIR = inc
-MVOBJ = mv -f *.o obj
+MVOBJ = mv -f *.o obj/
 DFLAG = -g
 
 SRC = $(patsubst %,$(SRCDIR)/%,$(SRCF))
