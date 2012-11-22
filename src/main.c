@@ -49,6 +49,7 @@ int processMakefileModif ()
 int main (int argc, char **argv)
 {
 	char *argument;
+
 	/* Check if makefile modified */
 	if (processMakefileModif () == FAILURE)
 	{
