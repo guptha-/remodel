@@ -9,6 +9,9 @@ int remodfileParseLine (char *prodLine, long lineNum)
 	char command[2560];
 	char targetName[256];
 	char depName[256][256];
+	ProdNode *prodNode = NULL;
+	ProdDepNode *prodDepNode = NULL;
+	DepNode *depNode = NULL;
 	char *tempProdLine = NULL;
 	char *tempTargDep = NULL;
 	char *tempDep = NULL;
@@ -21,6 +24,8 @@ int remodfileParseLine (char *prodLine, long lineNum)
 
 	memset (targDep, 0, 256);
 	memset (command, 0, 2560);
+	memset (targetName, 0, 256);
+	memset (depName, 0, 256 * 256);
 
 	tempProdLine = prodLine;
 	tempTargDep = targDep;
@@ -41,7 +46,7 @@ int remodfileParseLine (char *prodLine, long lineNum)
 	if ((quoteCount != 0) && (quoteCount != 2))
 	{
 	  /* More than one command - Return failure */
-		printf("remodfileParseLine: Wrong number of quotes found on line %lu\n", lineNum);
+		printf("remodfileParseLine: Wrong number of quotes found on %lu\n", lineNum);
 		return FAILURE;
 	}
 
@@ -125,6 +130,59 @@ int remodfileParseLine (char *prodLine, long lineNum)
 		tempTargDep++;
 	}
 
+	prodNode = (ProdNode *) malloc (sizeof (ProdNode));
+	memset (prodNode, 0, sizeof (ProdNode));
+	prodNode->targetPath = malloc (strlen (targetName) + 1);
+	prodNode->command = malloc (strlen (command) + 1);
+
+	strcpy (prodNode->targetPath, targetName);
+	strcpy (prodNode->command, command);
+
+	count = 0;
+	while (count < depCount)
+	{
+		depNode = (DepNode *) malloc (sizeof (DepNode));
+		memset (depNode, 0, sizeof (DepNode));
+		prodDepNode = (ProdDepNode *) malloc (sizeof (ProdDepNode));
+		memset (prodDepNode, 0, sizeof (ProdDepNode));
+		prodDepNode->node = depNode;
+		prodDepNode->prod = prodNode;
+		if (prodNode->depListHead == NULL)
+		{
+			prodNode->depListHead = prodDepNode;
+			prodNode->depListTail = prodDepNode;
+		}
+		else
+		{
+			prodNode->depListTail->next = prodDepNode;
+			prodNode->depListTail = prodDepNode;
+		}
+		depNode->depPath = malloc (strlen (depName[count]) + 1);
+		memset (depNode->depPath, 0, strlen (depName[count]) + 1);
+		strcpy (depNode->depPath, depName[count]);
+		if (gDepListHead == NULL)
+		{
+			gDepListHead = depNode;
+			gDepListTail = depNode;
+		}
+		else
+		{
+			gDepListTail->next = depNode;
+			gDepListTail = depNode;
+		}
+		count++;
+	}
+	if (gProdListHead == NULL)
+	{
+		gProdListHead = prodNode;
+		gProdListTail = prodNode;
+	}
+	else
+	{
+		gProdListTail->next = prodNode;
+		gProdListTail = prodNode;
+	}
+
 	printf("%s\n%s\n%s\n%s\n%s\n%s\n", prodLine, command, targDep, targetName, depName[0], depName[1]);
 	return SUCCESS;
 }
@@ -138,6 +196,7 @@ int remodfileProcessRemodfile ()
 	FILE *fp = NULL;
 	long lineNum = 0;
 
+	memset (content, 0, 2560);
 	fp = fopen ("remodfile", "r");
 	if (fp == NULL)
 	{

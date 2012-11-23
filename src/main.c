@@ -2,10 +2,10 @@
 
 /* Globals */
 
-ProdNode *prodListHead = NULL;
-DepNode *depListHead = NULL;
-ProdNode *prodListTail = NULL;
-DepNode *depListTail = NULL;
+ProdNode *gProdListHead = NULL;
+DepNode *gDepListHead = NULL;
+ProdNode *gProdListTail = NULL;
+DepNode *gDepListTail = NULL;
 
 int main (int argc, char **argv)
 {

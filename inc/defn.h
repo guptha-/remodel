@@ -10,10 +10,10 @@
 
 /* Globals */
 
-extern ProdNode *prodListHead;
-extern DepNode *depListHead;
-extern ProdNode *prodListTail;
-extern DepNode *depListTail;
+extern ProdNode *gProdListHead;
+extern DepNode *gDepListHead;
+extern ProdNode *gProdListTail;
+extern DepNode *gDepListTail;
 
 
 #endif

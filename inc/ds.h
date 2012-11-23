@@ -25,9 +25,10 @@ struct strChainProdNode
 /* Production node */
 struct strProdNode
 {
-	char targetPath[256];
-	char command[256];
+	char *targetPath;
+	char *command;
 	ProdDepNode *depListHead;
+	ProdDepNode *depListTail;
 	ProdNode *next; /* Link to next production */
 };
 
@@ -42,7 +43,7 @@ struct strProdDepNode
 /* Dependency node */
 struct strDepNode
 {
-	char depPath[256];
+	char *depPath;
 	DepNode *next;
 };
 

@@ -49,5 +49,5 @@ obj/util.o: src/util.c $(INC)
 	gcc -c src/util.c -I inc $(WFLAG) $(DFLAG) -o obj/util.o
 
 clean:
-	rm -rf bin/*
+	rm -rf bin/remodel
 	rm -rf obj/*
