@@ -5,26 +5,32 @@
  */
 int remodfileParseLine (char *prodLine, long lineNum)
 {
+	char targName[256][256];
 	char targDep[256];
 	char command[2560];
-	char targetName[256];
+	char targString[2560];
 	char depName[256][256];
 	ProdNode *prodNode = NULL;
+	ProdTargNode *prodTargNode = NULL;
+	TargNode *targNode = NULL;
 	ProdDepNode *prodDepNode = NULL;
 	DepNode *depNode = NULL;
 	char *tempProdLine = NULL;
 	char *tempTargDep = NULL;
 	char *tempDep = NULL;
 	char *tempCommand = NULL;
+	char *tempTargString = NULL;
 	int quoteCount = 0;
 	int depCount = 0;
+	int targCount = 0;
 	int tempCount = 0;
 	int commandPresent = FALSE;
 	int count = 0;
 
 	memset (targDep, 0, 256);
 	memset (command, 0, 2560);
-	memset (targetName, 0, 256);
+	memset (targString, 0, 2560);
+	memset (targName, 0, 256 * 256);
 	memset (depName, 0, 256 * 256);
 
 	tempProdLine = prodLine;
@@ -57,6 +63,7 @@ int remodfileParseLine (char *prodLine, long lineNum)
 		commandPresent = TRUE;
 	}
 
+	/* Parsing out the command. */
 	if (commandPresent == TRUE)
 	{
 		while (*tempProdLine != '\0')
@@ -106,12 +113,33 @@ int remodfileParseLine (char *prodLine, long lineNum)
 		return FAILURE;
 	}
 
-	strncpy (targetName, targDep, strlen (targDep) - strlen (tempTargDep));
+	strncpy (targString, targDep, strlen (targDep) - strlen (tempTargDep));
 	tempTargDep += 2;
 	tempDep = tempTargDep;
 
 	for(; *tempTargDep; depCount += (*tempTargDep++ == ','));
 	depCount++;
+
+	tempTargString = targString;
+	for(; *tempTargString; targCount += (*tempTargString++ == ','));
+	targCount++;
+
+	if (targCount >= 256)
+	{
+		printf ("remodfileParseLine: Too many targets on line %lu\n", lineNum);
+		return FAILURE;
+	}
+
+	tempTargString = targString;
+	for (count = 0; count < targCount; count++)
+	{
+		tempCount = 0;
+		while ((*tempTargString != ',') && (*tempTargString != '\0'))
+		{
+			targName[count][tempCount++] = *tempTargString++;
+		}
+		tempTargString++;
+	}
 
 	if (depCount >= 256)
 	{
@@ -132,11 +160,44 @@ int remodfileParseLine (char *prodLine, long lineNum)
 
 	prodNode = (ProdNode *) malloc (sizeof (ProdNode));
 	memset (prodNode, 0, sizeof (ProdNode));
-	prodNode->targetPath = malloc (strlen (targetName) + 1);
 	prodNode->command = malloc (strlen (command) + 1);
 
-	strcpy (prodNode->targetPath, targetName);
 	strcpy (prodNode->command, command);
+
+	count = 0;
+	while (count < targCount)
+	{
+		targNode = (TargNode *) malloc (sizeof (TargNode));
+		memset (targNode, 0, sizeof (TargNode));
+		prodTargNode = (ProdTargNode *) malloc (sizeof (ProdTargNode));
+		memset (prodTargNode, 0, sizeof (ProdTargNode));
+		prodTargNode->node = targNode;
+		prodTargNode->prod = prodNode;
+		if (prodNode->targListHead == NULL)
+		{
+			prodNode->targListHead = prodTargNode;
+			prodNode->targListTail = prodTargNode;
+		}
+		else
+		{
+			prodNode->targListTail->next = prodTargNode;
+			prodNode->targListTail = prodTargNode;
+		}
+		targNode->targPath = malloc (strlen (targName[count]) + 1);
+		memset (targNode->targPath, 0, strlen (targName[count]) + 1);
+		strcpy (targNode->targPath, targName[count]);
+		if (gTargListHead == NULL)
+		{
+			gTargListHead = targNode;
+			gTargListTail = targNode;
+		}
+		else
+		{
+			gTargListTail->next = targNode;
+			gTargListTail = targNode;
+		}
+		count++;
+	}
 
 	count = 0;
 	while (count < depCount)
@@ -183,7 +244,7 @@ int remodfileParseLine (char *prodLine, long lineNum)
 		gProdListTail = prodNode;
 	}
 
-	printf("%s\n%s\n%s\n%s\n%s\n%s\n", prodLine, command, targDep, targetName, depName[0], depName[1]);
+	printf("%s\n%s\n%s\n%s\n%s\n%s\n", prodLine, command, targDep, targName[0], targName[1], depName[0], depName[1]);
 	return SUCCESS;
 }
 

@@ -1,3 +1,3 @@
 DEFAULT <- baz, caz
-baz <- a.o, b.o : "gcc a.o b.o -o baz"
-caz <- c.o, d.o, e.o : "gcc c.o d.o e.o -o caz"
+baz,daz <- a.o, b.o : "gcc a.o b.o -o baz"
+caz, laz <- c.o, d.o, e.o : "gcc c.o d.o e.o -o caz"

@@ -3,15 +3,17 @@
 /* Globals */
 
 ProdNode *gProdListHead = NULL;
-DepNode *gDepListHead = NULL;
 ProdNode *gProdListTail = NULL;
+TargNode *gTargListHead = NULL;
+TargNode *gTargListTail = NULL;
+DepNode *gDepListHead = NULL;
 DepNode *gDepListTail = NULL;
 
 int main (int argc, char **argv)
 {
 	char *argument;
 
-	/* Create .remodel directory. */
+	/* Create .remodel directory if it hasn't already been created. */
 	system ("mkdir -p .remodel");
 
 	/* Check if remodfile modified */
@@ -19,8 +21,6 @@ int main (int argc, char **argv)
 	{
 		printf ("Error verifying remodfile\n");
 	}
-	
-	/* Load in the presaved MD5 hashes */
 	
   if (argc == 2)
 	{
@@ -32,6 +32,7 @@ int main (int argc, char **argv)
 		argument = (char *) malloc (sizeof(char) * strlen ("DEFAULT") + 1);
 		strcpy (argument, "DEFAULT");
   }
+
   /* Populate data structures with production information */
 	if (remodfileProcessRemodfile () == FAILURE)
 	{
@@ -40,8 +41,12 @@ int main (int argc, char **argv)
 		return FAILURE;
 	}
 
+	/* Construct dependency tree for the desired argument. */
+
 	free (argument);
 
+	/* Load in the presaved MD5 hashes */
+	
 	/* Compute and compare MD5s for all the productions' dependencies */
 	
 	/* Generate list of productions whose dependencies have been modified/ MD5s

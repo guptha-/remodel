@@ -11,8 +11,10 @@
 /* Globals */
 
 extern ProdNode *gProdListHead;
-extern DepNode *gDepListHead;
 extern ProdNode *gProdListTail;
+extern TargNode *gTargListHead;
+extern TargNode *gTargListTail;
+extern DepNode *gDepListHead;
 extern DepNode *gDepListTail;
 
 
