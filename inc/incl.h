@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../inc/prot.h"
-#include "../inc/md5.h"
-#include "../inc/defn.h"
-#include "../inc/ds.h"
+#include "ds.h"
+#include "defn.h"
+#include "prot.h"
+#include "md5.h"
 
 #endif

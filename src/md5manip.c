@@ -1,15 +1,5 @@
 #include "../inc/incl.h"
 
-/* md5AppendPathToFileName prepends ".remodel/" to the filename.
- * !! Make sure to reserve enough memory to the return variable before calling.
- */
-void md5AppendPathToFileName (char *fileName, char *retFileName)
-{
-	memset (retFileName, 0, strlen (fileName) + strlen (".remodel/") + 1);
-	strcat (retFileName, ".remodel/");
-	strcat (retFileName, fileName);
-}
-
 /* md5DetectFileModif finds out if the given file has been modified since
  * last run of remodel and returns TRUE if modified. 
  */
@@ -23,7 +13,7 @@ int md5DetectFileModif (char *fileName)
 	memset (hexDigest, 0, 16*2+1);
 	memset (hexDigestNew, 0, 16*2+1);
 
-	md5AppendPathToFileName (fileName, filePath);
+	utilAppendPathToFileName (fileName, filePath);
 
 	if (md5CalcFileMD5 (fileName, hexDigestNew) == FAILURE)
 	{
@@ -83,31 +73,6 @@ int md5StoreMD5ToFile (char *fileName, char *hexDigest)
 	return SUCCESS;
 }
 
-/* md5FileToString takes in a filename and loads and returns the contents of the
- * file as a string.
- */
-int md5FileToString (char *fileName, char **content, long *fileSize)
-{
-	long result = 0;
-	FILE* fp = fopen(fileName, "r");
-	if (fp == NULL)
-	{
-		return FAILURE;
-	}
-	fseek(fp, 0, SEEK_END);
-	*fileSize = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	*content = malloc(sizeof(char) * *fileSize);
-	result = fread(*content, 1, *fileSize, fp);
-	if (result <= 0)
-	{
-		printf ("md5FileToString: File is empty\n");
-		return FAILURE;
-	}
-	return SUCCESS;
-}
-
-
 /* md5CalcFileMD5 calculates and returns the MD5 hash of the given file.
  */
 int md5CalcFileMD5 (char *fileName, char *hexDigest)
@@ -118,7 +83,7 @@ int md5CalcFileMD5 (char *fileName, char *hexDigest)
 	long fileSize = 0;
 	int i = 0;
 
-	if (md5FileToString (fileName, &content, &fileSize) == FAILURE)
+	if (utilFileToString (fileName, &content, &fileSize) == FAILURE)
 	{
 		return FAILURE;
 	}

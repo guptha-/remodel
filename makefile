@@ -4,11 +4,14 @@ WFLAG = -Wall
 
 SRCF = $(MAIN).c\
       md5.c\
-			md5manip.c
+			md5manip.c\
+			remodfile.c\
+			util.c
 INCF = defn.h\
       incl.h\
 			prot.h\
-			md5.h
+			md5.h\
+			ds.h
 OBJF = $(SRCF:.c=.o)
 SRCDIR = src
 OBJDIR = obj
@@ -36,6 +39,14 @@ obj/$(MAIN).o: src/main.c src/utmain.c $(INC)
 obj/md5manip.o: src/md5manip.c $(INC)
 	$(CREATEDIR)
 	gcc -c src/md5manip.c -I inc $(WFLAG) $(DFLAG) -o obj/md5manip.o
+
+obj/remodfile.o: src/remodfile.c $(INC)
+	$(CREATEDIR)
+	gcc -c src/remodfile.c -I inc $(WFLAG) $(DFLAG) -o obj/remodfile.o
+
+obj/util.o: src/util.c $(INC)
+	$(CREATEDIR)
+	gcc -c src/util.c -I inc $(WFLAG) $(DFLAG) -o obj/util.o
 
 clean:
 	rm -rf bin/*

@@ -11,5 +11,8 @@ int md5CalcFileMD5 (char *fileName, char *hexDigest);
 int md5AreMD5sEqual (char *MD5One, char *MD5Two);
 int md5GetMD5FromFile (char *fileName, char *hexDigest);
 int md5StoreMD5ToFile (char *fileName, char *hexDigest);
-void md5AppendPathToFileName (char *fileName, char *retFileName);
+void utilAppendPathToFileName (char *fileName, char *retFileName);
+int utilFileToString (char *fileName, char **content, long *fileSize);
+int remodfileProcessRemodfileModif ();
+int remodfileProcessRemodfile ();
 #endif /* prot_INCL */
