@@ -244,7 +244,7 @@ int remodfileParseLine (char *prodLine, long lineNum)
 		gProdListTail = prodNode;
 	}
 
-	printf("%s\n%s\n%s\n%s\n%s\n%s\n", prodLine, command, targDep, targName[0], targName[1], depName[0], depName[1]);
+	printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", prodLine, command, targDep, targName[0], targName[1], depName[0], depName[1]);
 	return SUCCESS;
 }
 

@@ -8,6 +8,8 @@ TargNode *gTargListHead = NULL;
 TargNode *gTargListTail = NULL;
 DepNode *gDepListHead = NULL;
 DepNode *gDepListTail = NULL;
+TreeDepNode *gTreeDepListHead = NULL;
+TreeDepNode *gTreeDepListTail = NULL;
 
 int main (int argc, char **argv)
 {
@@ -42,6 +44,11 @@ int main (int argc, char **argv)
 	}
 
 	/* Construct dependency tree for the desired argument. */
+	if (treeConstructTree (argument))
+	{
+	  free (argument);
+		return FAILURE;
+	}
 
 	free (argument);
 

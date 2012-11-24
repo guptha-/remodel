@@ -7,22 +7,9 @@ typedef struct strDepNode DepNode;
 typedef struct strProdDepNode ProdDepNode;
 typedef struct strTargNode TargNode;
 typedef struct strProdTargNode ProdTargNode;
-/* Chain node */
-struct strChainNode
-{
-	ChainProdNode *prodListHead;
-	ChainProdNode *prodListTail;
-	ChainNode *next;
-};
-
-/* List node for a chain's productions */
-struct strChainProdNode
-{
-	ChainNode *chain; /* Backpointer to parent chain */
-	ProdNode *prod; /* Actual node */ 
-	ChainProdNode *prev;
-	ChainProdNode *next;
-};
+typedef struct strTreeDepNode TreeDepNode;
+typedef struct strTreePredNode TreePredNode;
+typedef struct strTreeSuccNode TreeSuccNode;
 
 /* Production node */
 struct strProdNode
@@ -48,6 +35,31 @@ struct strDepNode
 {
 	char *depPath;
 	DepNode *next;
+};
+
+/* Tree successor node */
+struct strTreeSuccNode
+{
+	TreeDepNode *node;
+	TreeSuccNode *next;
+};
+
+/* Tree predecessor node */
+struct strTreePredNode
+{
+	TreeDepNode *node;
+	TreePredNode *next;
+};
+
+/* Tree dependency node */
+struct strTreeDepNode
+{
+	DepNode *node; /*Actual dependency node */
+	TreeSuccNode *treeSuccHead; /* List of successors*/
+	TreeSuccNode *treeSuccTail;
+	TreePredNode *treePredHead; /* List of predecessors */
+	TreePredNode *treePredTail;
+	TreeDepNode *next;
 };
 
 /* List node for a production's targets */

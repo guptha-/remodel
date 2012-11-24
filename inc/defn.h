@@ -16,6 +16,8 @@ extern TargNode *gTargListHead;
 extern TargNode *gTargListTail;
 extern DepNode *gDepListHead;
 extern DepNode *gDepListTail;
+extern TreeDepNode *gTreeDepListHead;
+extern TreeDepNode *gTreeDepListTail;
 
 
 #endif

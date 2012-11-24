@@ -6,7 +6,8 @@ SRCF = $(MAIN).c\
       md5.c\
 			md5manip.c\
 			remodfile.c\
-			util.c
+			util.c\
+			tree.c
 INCF = defn.h\
       incl.h\
 			prot.h\
@@ -47,6 +48,10 @@ obj/remodfile.o: src/remodfile.c $(INC)
 obj/util.o: src/util.c $(INC)
 	$(CREATEDIR)
 	gcc -c src/util.c -I inc $(WFLAG) $(DFLAG) -o obj/util.o
+
+obj/tree.o: src/tree.c $(INC)
+	$(CREATEDIR)
+	gcc -c src/tree.c -I inc $(WFLAG) $(DFLAG) -o obj/tree.o
 
 clean:
 	rm -rf bin/remodel

@@ -1,3 +1,8 @@
-DEFAULT <- baz, caz
-baz,daz <- a.o, b.o : "gcc a.o b.o -o baz"
-caz, laz <- c.o, d.o, e.o : "gcc c.o d.o e.o -o caz"
+DEFAULT <- bin/baz, bin/caz
+bin/baz,bin/daz <- obj/a.o, obj/b.o : "gcc obj/a.o obj/b.o -o bin/baz"
+bin/caz, bin/laz <- obj/a.o, obj/c.o, obj/d.o, obj/e.o : "gcc obj/c.o obj/d.o obj/e.o -o bin/caz"
+obj/a.o <- src/a.c : "gcc a.c -o a.o"
+obj/b.o <- src/b.c : "gcc b.c -o b.o"
+obj/c.o <- src/c.c : "gcc c.c -o c.o"
+obj/d.o <- src/d.c : "gcc d.c -o d.o"
+obj/e.o <- src/e.c : "gcc e.c -o e.o"
