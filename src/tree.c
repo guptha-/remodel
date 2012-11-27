@@ -52,7 +52,7 @@ void treeLocateTreeDepNode (DepNode *depNode, TreeDepNode **treeDepNode)
 
 	while (*treeDepNode != NULL)
 	{
-		if (depNode == (*treeDepNode)->node)
+		if (strcmp ((*treeDepNode)->node->depPath, depNode->depPath) == 0)
 		{
 			break;
 		}
@@ -71,6 +71,7 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 	TreePredNode *treePredNode = NULL;
 	TreeSuccNode *treeSuccNode = NULL;
 	FILE *fp = NULL;
+	int nodeAlreadyExists = FALSE;
 
 	treeFindTargetNodeFromArg (treeDepNode->node->depPath, &targNode);
 
@@ -133,7 +134,7 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 		}
 		else
 		{
-			printf ("Located existing tree dep node\n");
+			nodeAlreadyExists = TRUE;
 		}
 		treePredNode = (TreePredNode *) malloc (sizeof(TreePredNode));
 		memset (treePredNode, 0, sizeof (TreePredNode));
@@ -149,6 +150,12 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 			tempTreeDepNode->treePredTail = treePredNode;
 		}
 
+		if (nodeAlreadyExists == TRUE)
+		{
+			prodDepNode = prodDepNode->next;
+			nodeAlreadyExists = FALSE;
+			continue;
+		}
 		treeSuccNode = (TreeSuccNode *) malloc (sizeof(TreeSuccNode));
 		memset (treeSuccNode, 0, sizeof (TreeSuccNode));
 		treeSuccNode->node = tempTreeDepNode;
