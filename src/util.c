@@ -10,6 +10,19 @@ void utilAppendPathToFileName (char *fileName, char *retFileName)
 	strcat (retFileName, fileName);
 }
 
+/* utilFindIfFileExists takes in a filename and checks if it exists.
+ */
+int utilFindIfFileExists (char *fileName)
+{
+	FILE* fp = fopen(fileName, "r");
+	if (fp == NULL)
+	{
+		return FALSE;
+	}
+	fclose (fp);
+	return TRUE;
+}
+	
 /* utilFileToString takes in a filename and loads and returns the contents of the
  * file as a string.
  */

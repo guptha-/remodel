@@ -10,6 +10,7 @@ typedef struct strProdTargNode ProdTargNode;
 typedef struct strTreeDepNode TreeDepNode;
 typedef struct strTreePredNode TreePredNode;
 typedef struct strTreeSuccNode TreeSuccNode;
+typedef struct strTreeLeafNode TreeLeafNode;
 
 /* Production node */
 struct strProdNode
@@ -60,6 +61,15 @@ struct strTreeDepNode
 	TreePredNode *treePredHead; /* List of predecessors */
 	TreePredNode *treePredTail;
 	TreeDepNode *next;
+	int dispatchStatus;
+};
+
+/* Tree leaf node */
+struct strTreeLeafNode
+{
+	TreeDepNode *node;
+	TreeLeafNode *next;
+	pid_t processID;
 };
 
 /* List node for a production's targets */

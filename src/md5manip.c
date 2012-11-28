@@ -54,6 +54,56 @@ int md5GetMD5FromFile (char *fileName, char *hexDigest)
 	return SUCCESS;
 }
 
+/* md5CalcAndStoreMD5 calculates the MD5 of the given file and stores it in the
+ * remodel MD5 database.
+ */
+int md5CalcAndStoreMD5 (char *fileName)
+{
+	char hexDigest[16*2+1];
+	char *filePath = NULL;
+	char *tempFilePtr = fileName;
+	char *tempFileName = NULL;
+	char *command = NULL;
+
+	filePath = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	tempFileName = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	command = malloc (strlen (fileName) + strlen (".remodel/") + 256);
+	memset (tempFileName, 0, strlen (fileName) + strlen (".remodel/") + 1);
+	memset (command, 0, strlen (fileName) + strlen (".remodel/") + 256);
+	utilAppendPathToFileName (fileName, filePath);
+
+	while (*tempFilePtr != '\0')
+	{
+		/* Creating directory structure if necessary. */
+		if (*tempFilePtr == '/')
+		{
+			strncpy (tempFileName, filePath, 
+			         strlen (filePath) - strlen (tempFilePtr));
+			strcat (command, "mkdir -p ");
+			strcat (command, tempFileName);
+			printf ("executing %s\n", command);
+			system (command);
+			memset (command, 0, strlen (fileName) + strlen (".remodel/") + 256);
+		}
+			
+		tempFilePtr++;
+	}
+	
+	if (md5CalcFileMD5 (fileName, hexDigest) == FAILURE)
+	{
+		free (filePath);
+		return FAILURE;
+	}
+	if (md5StoreMD5ToFile (filePath, hexDigest) == FAILURE)
+	{
+		free (filePath);
+		return FAILURE;
+	}
+	free (filePath);
+	return SUCCESS;
+}
+
+
 
 /* md5StoreMD5ToFile stores the hexDigest to the given fileName. */
 int md5StoreMD5ToFile (char *fileName, char *hexDigest)

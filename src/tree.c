@@ -1,5 +1,232 @@
 #include "../inc/incl.h"
 
+/* treeRemoveLeafFromTree removes the given tree leaf from the list.
+ */
+void treeRemoveLeafFromTree (TreeLeafNode **Head, TreeLeafNode **Tail,
+														TreeLeafNode *treeLeafNode)
+{
+	TreeLeafNode *prevTreeListNode = NULL;
+	TreeLeafNode *tempTreeList = NULL;
+
+	tempTreeList = *Head;
+	while (tempTreeList != NULL)
+	{
+		if (tempTreeList == treeLeafNode)
+		{
+			if (prevTreeListNode == NULL)
+			{
+				if (*Head == *Tail)
+				{
+					free (*Head);
+					*Head = NULL;
+					*Tail = NULL;
+					tempTreeList = NULL;
+				}
+				else
+				{
+					*Head = (*Head)->next;
+					free (tempTreeList);
+					tempTreeList = *Head;
+				}
+			}
+			else
+			{
+				if (tempTreeList->next == NULL)
+				{
+					*Tail = prevTreeListNode;
+					prevTreeListNode->next = NULL;
+					free (tempTreeList);
+					tempTreeList = NULL;
+				}
+				else
+				{
+					prevTreeListNode->next = tempTreeList->next;
+					free (tempTreeList);
+					tempTreeList = prevTreeListNode->next;
+				}
+			}
+		}
+		else
+		{
+			prevTreeListNode = tempTreeList;
+			tempTreeList = tempTreeList->next;
+		}
+	}
+}
+
+/* treeRemoveNodeFromTree removes the given tree node from the tree and also deletes
+ * the relevant MD5 file for the parent.
+ */
+void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
+{
+	TreeDepNode *treeDepNode = treeLeafNode->node;
+	TreeDepNode *treeDepListNode = NULL;
+	TreeDepNode *prevTreeDepListNode = NULL;
+	TreePredNode *treePredNode = treeDepNode->treePredHead;
+	TreeSuccNode *treeSuccNode = NULL;
+	TreeSuccNode *prevTreeSuccNode = NULL;
+	char *command = NULL;
+
+	while (treePredNode != NULL)
+	{
+		/* Removing MD5 information of all the predecessors of this node and removing
+		   this node from their lists. */
+		command = malloc (strlen (treePredNode->node->node->depPath) + 
+							strlen (".remodel/") + strlen ("rm -f") + 1);
+		memset (command, 0, strlen (treePredNode->node->node->depPath) + 
+							strlen (".remodel/") + strlen ("rm -f ") + 1);
+		strcat (command, "rm -f ");
+		strcat (command, ".remodel/");
+		strcat (command, treePredNode->node->node->depPath);
+		system (command);
+
+		treeSuccNode = treePredNode->node->treeSuccHead;
+		while (treeSuccNode != NULL)
+		{
+			if (strcmp (treeSuccNode->node->node->depPath, treeDepNode->node->depPath) 
+				  == 0)
+			{
+				if (prevTreeSuccNode == NULL)
+				{
+					if (treePredNode->node->treeSuccHead == treePredNode->node->treeSuccTail)
+					{
+						free (treePredNode->node->treeSuccHead);
+						treePredNode->node->treeSuccHead = NULL;
+						treePredNode->node->treeSuccTail = NULL;
+						treeSuccNode = NULL;
+					}
+					else
+					{
+						treePredNode->node->treeSuccHead = 
+														treePredNode->node->treeSuccHead->next;
+						free (treeSuccNode);
+						treeSuccNode = treePredNode->node->treeSuccHead;
+					}
+				}
+				else
+				{
+					if (treeSuccNode->next == NULL)
+					{
+						treePredNode->node->treeSuccTail = prevTreeSuccNode;
+						prevTreeSuccNode->next = NULL;
+						free (treeSuccNode);
+						treeSuccNode = NULL;
+					}
+					else
+					{
+						prevTreeSuccNode->next = treeSuccNode->next;
+						free (treeSuccNode);
+						treeSuccNode = prevTreeSuccNode->next;
+					}
+				}
+			}
+			else
+			{
+				prevTreeSuccNode = treeSuccNode;
+				treeSuccNode = treeSuccNode->next;
+			}
+		}
+
+		treePredNode = treePredNode->next;
+	}
+
+	treeDepListNode = gTreeDepListHead;
+	while (treeDepListNode != NULL)
+	{
+		if (strcmp (treeDepListNode->node->depPath, treeDepNode->node->depPath) 
+				== 0)
+		{
+			if (prevTreeDepListNode == NULL)
+			{
+				if (gTreeDepListHead == gTreeDepListTail)
+				{
+					free (gTreeDepListHead);
+					gTreeDepListHead = NULL;
+					gTreeDepListTail = NULL;
+					treeDepListNode = NULL;
+				}
+				else
+				{
+					gTreeDepListHead = gTreeDepListHead->next;
+					free (treeDepListNode);
+					treeDepListNode = gTreeDepListHead;
+				}
+			}
+			else
+			{
+				if (treeDepListNode->next == NULL)
+				{
+					gTreeDepListTail = prevTreeDepListNode;
+					prevTreeDepListNode->next = NULL;
+					free (treeDepListNode);
+					treeDepListNode = NULL;
+				}
+				else
+				{
+					prevTreeDepListNode->next = treeDepListNode->next;
+					free (treeDepListNode);
+					treeDepListNode = prevTreeDepListNode->next;
+				}
+			}
+		}
+		else
+		{
+			prevTreeDepListNode = treeDepListNode;
+			treeDepListNode = treeDepListNode->next;
+		}
+	}
+}
+
+	
+/* treeLocateTreeLeafFromPID locates the tree leaf node from the embedded process
+ * ID.
+ */
+void treeLocateTreeLeafFromPID (TreeLeafNode *treeLeafHead, pid_t processID,
+                                TreeLeafNode **locatedTreeLeaf)
+{
+	*locatedTreeLeaf = NULL;
+	while (treeLeafHead != NULL)
+	{
+		if (treeLeafHead->processID == processID)
+		{
+			*locatedTreeLeaf = treeLeafHead;
+			break;
+		}
+	}
+}
+
+/* treeBuildLeafList builds a list of all the leaf nodes of the tree.
+ */
+void treeBuildLeafList (TreeDepNode *treeDepNode, TreeLeafNode **treeLeafHead,
+                        TreeLeafNode **treeLeafTail)
+{
+	TreeLeafNode *treeLeafNode = NULL;
+	TreeSuccNode *treeSuccNode = treeDepNode->treeSuccHead;
+
+	if ((treeSuccNode == NULL) && (treeDepNode->dispatchStatus == FALSE))
+	{
+		/* This is a leaf node. Add it to the list. */
+		treeLeafNode = (TreeLeafNode *) malloc (sizeof (TreeLeafNode));
+		memset (treeLeafNode, 0, sizeof (TreeLeafNode));
+		treeLeafNode->node = treeDepNode;
+		if (*treeLeafHead == NULL)
+		{
+			(*treeLeafHead) = treeLeafNode;
+			(*treeLeafTail) = treeLeafNode;
+		}
+		else
+		{
+			(*treeLeafTail)->next = treeLeafNode;
+			(*treeLeafTail) = treeLeafNode;
+		}
+	}
+	while (treeSuccNode != NULL)
+	{
+		treeBuildLeafList (treeSuccNode->node, treeLeafHead, treeLeafTail);
+		treeSuccNode = treeSuccNode->next;
+	}
+}
+
 /* treeFindProdForTarget takes in the target and gives the first production that 
  * has the target node as one of its targets.
  */
@@ -121,6 +348,7 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 			tempTreeDepNode = (TreeDepNode *) malloc (sizeof(TreeDepNode));
 			memset (tempTreeDepNode, 0, sizeof (TreeDepNode));
 			tempTreeDepNode->node = prodDepNode->node;
+			tempTreeDepNode->dispatchStatus = FALSE;
 			if (gTreeDepListHead == NULL)
 			{
 				gTreeDepListHead = tempTreeDepNode;
@@ -199,6 +427,7 @@ int treeConstructTree (char *argument)
 	memset (depNode->depPath, 0, strlen (argument) + 1);
 	strcpy (depNode->depPath, argument);
 	treeDepNode->node = depNode;
+	treeDepNode->dispatchStatus = FALSE;
 
 	gTreeDepListHead = treeDepNode;
 	gTreeDepListTail = treeDepNode;

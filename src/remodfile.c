@@ -244,7 +244,6 @@ int remodfileParseLine (char *prodLine, long lineNum)
 		gProdListTail = prodNode;
 	}
 
-	printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", prodLine, command, targDep, targName[0], targName[1], depName[0], depName[1]);
 	return SUCCESS;
 }
 
@@ -298,7 +297,7 @@ int remodfileProcessRemodfileModif ()
 		  (strlen (hexDigest) != 16*2))
 	{
 		/* Remodfile modified/ digest stored is invalid */
-		system ("rm -f .remodel/*");
+		system ("rm -rf .remodel/*");
 	}
 
 	if (md5CalcFileMD5 (fileName, hexDigestNew) == FAILURE)
@@ -310,7 +309,7 @@ int remodfileProcessRemodfileModif ()
 	if (md5AreMD5sEqual (hexDigest, hexDigestNew) != TRUE)
 	{
 		/* Remodfile has been modified */
-		system ("rm -f .remodel/*");
+		system ("rm -rf .remodel/*");
 	}
 
 	if (md5StoreMD5ToFile (filePath, hexDigestNew) == FAILURE)
