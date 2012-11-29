@@ -14,9 +14,10 @@ void utilAppendPathToFileName (char *fileName, char *retFileName)
  */
 int utilFindIfFileExists (char *fileName)
 {
-	FILE* fp = fopen(fileName, "r");
+	FILE* fp = fopen(fileName, "r+");
 	if (fp == NULL)
 	{
+		fp = fopen (fileName, "r");
 		return FALSE;
 	}
 	fclose (fp);
@@ -44,7 +45,9 @@ int utilFileToString (char *fileName, char **content, long *fileSize)
 	{
 		printf ("utilFileToString: File is empty\n");
 		free (*content);
+		fclose (fp);
 		return FAILURE;
 	}
+	fclose (fp);
 	return SUCCESS;
 }

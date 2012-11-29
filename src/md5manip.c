@@ -47,6 +47,7 @@ int md5GetMD5FromFile (char *fileName, char *hexDigest)
 	}
 	if (fgets (hexDigest, 16*2+1, fp) == NULL)
 	{
+		fclose (fp);
 		return FAILURE;
 	}
 
@@ -81,7 +82,6 @@ int md5CalcAndStoreMD5 (char *fileName)
 			         strlen (filePath) - strlen (tempFilePtr));
 			strcat (command, "mkdir -p ");
 			strcat (command, tempFileName);
-			printf ("executing %s\n", command);
 			system (command);
 			memset (command, 0, strlen (fileName) + strlen (".remodel/") + 256);
 		}
@@ -156,7 +156,7 @@ int md5CalcFileMD5 (char *fileName, char *hexDigest)
 */
 int md5AreMD5sEqual (char *MD5One, char *MD5Two)
 {
-	if (strncmp (MD5One, MD5Two, 16*2+1) == 0)
+	if (strncmp (MD5One, MD5Two, 16*2) == 0)
 	{
 		return TRUE;
 	}

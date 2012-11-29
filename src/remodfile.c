@@ -268,6 +268,7 @@ int remodfileProcessRemodfile ()
 		lineNum++;
 		if (remodfileParseLine (content, lineNum) == FAILURE)
 		{
+			fclose (fp);
 			return FAILURE;
 		}
 	}
@@ -297,6 +298,7 @@ int remodfileProcessRemodfileModif ()
 		  (strlen (hexDigest) != 16*2))
 	{
 		/* Remodfile modified/ digest stored is invalid */
+		printf ("Executing rm -rf .remodel/*\n");
 		system ("rm -rf .remodel/*");
 	}
 
@@ -309,6 +311,7 @@ int remodfileProcessRemodfileModif ()
 	if (md5AreMD5sEqual (hexDigest, hexDigestNew) != TRUE)
 	{
 		/* Remodfile has been modified */
+		printf ("Executing rm -rf .remodel/*\n");
 		system ("rm -rf .remodel/*");
 	}
 

@@ -65,21 +65,9 @@ void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 	TreePredNode *treePredNode = treeDepNode->treePredHead;
 	TreeSuccNode *treeSuccNode = NULL;
 	TreeSuccNode *prevTreeSuccNode = NULL;
-	char *command = NULL;
 
 	while (treePredNode != NULL)
 	{
-		/* Removing MD5 information of all the predecessors of this node and removing
-		   this node from their lists. */
-		command = malloc (strlen (treePredNode->node->node->depPath) + 
-							strlen (".remodel/") + strlen ("rm -f") + 1);
-		memset (command, 0, strlen (treePredNode->node->node->depPath) + 
-							strlen (".remodel/") + strlen ("rm -f ") + 1);
-		strcat (command, "rm -f ");
-		strcat (command, ".remodel/");
-		strcat (command, treePredNode->node->node->depPath);
-		system (command);
-
 		treeSuccNode = treePredNode->node->treeSuccHead;
 		while (treeSuccNode != NULL)
 		{
