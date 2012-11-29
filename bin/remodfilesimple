@@ -1,0 +1,3 @@
+DEFAULT <- bin/baz
+bin/baz <- obj/a.o : "gcc obj/a.o -o bin/baz"
+obj/a.o <- src/a.c : "gcc -c src/a.c -o obj/a.o"

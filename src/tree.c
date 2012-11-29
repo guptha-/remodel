@@ -88,7 +88,7 @@ void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 						treePredNode->node->treeSuccHead = 
 														treePredNode->node->treeSuccHead->next;
 						free (treeSuccNode);
-						treeSuccNode = treePredNode->node->treeSuccHead;
+						treeSuccNode = NULL;
 					}
 				}
 				else
@@ -104,7 +104,7 @@ void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 					{
 						prevTreeSuccNode->next = treeSuccNode->next;
 						free (treeSuccNode);
-						treeSuccNode = prevTreeSuccNode->next;
+						treeSuccNode = NULL;
 					}
 				}
 			}
@@ -137,7 +137,7 @@ void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 				{
 					gTreeDepListHead = gTreeDepListHead->next;
 					free (treeDepListNode);
-					treeDepListNode = gTreeDepListHead;
+					treeDepListNode = NULL;
 				}
 			}
 			else
@@ -153,7 +153,7 @@ void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 				{
 					prevTreeDepListNode->next = treeDepListNode->next;
 					free (treeDepListNode);
-					treeDepListNode = prevTreeDepListNode->next;
+					treeDepListNode = NULL;
 				}
 			}
 		}
@@ -180,6 +180,7 @@ void treeLocateTreeLeafFromPID (TreeLeafNode *treeLeafHead, pid_t processID,
 			*locatedTreeLeaf = treeLeafHead;
 			break;
 		}
+		treeLeafHead = treeLeafHead->next;
 	}
 }
 
