@@ -2,3 +2,4 @@
 tags
 bin/remodel
 .remodel/*
+bin/.remodel/*
