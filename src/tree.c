@@ -286,7 +286,6 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 	TreePredNode *treePredNode = NULL;
 	TreeSuccNode *treeSuccNode = NULL;
 	FILE *fp = NULL;
-	int nodeAlreadyExists = FALSE;
 
 	treeFindTargetNodeFromArg (treeDepNode->node->depPath, &targNode);
 
@@ -348,10 +347,6 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 				gTreeDepListTail = tempTreeDepNode;
 			}
 		}
-		else
-		{
-			nodeAlreadyExists = TRUE;
-		}
 		treePredNode = (TreePredNode *) malloc (sizeof(TreePredNode));
 		memset (treePredNode, 0, sizeof (TreePredNode));
 		treePredNode->node = treeDepNode;
@@ -366,12 +361,6 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 			tempTreeDepNode->treePredTail = treePredNode;
 		}
 
-		if (nodeAlreadyExists == TRUE)
-		{
-			prodDepNode = prodDepNode->next;
-			nodeAlreadyExists = FALSE;
-			continue;
-		}
 		treeSuccNode = (TreeSuccNode *) malloc (sizeof(TreeSuccNode));
 		memset (treeSuccNode, 0, sizeof (TreeSuccNode));
 		treeSuccNode->node = tempTreeDepNode;
