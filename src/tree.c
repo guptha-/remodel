@@ -54,8 +54,7 @@ void treeRemoveLeafFromTree (TreeLeafNode **Head, TreeLeafNode **Tail,
 	}
 }
 
-/* treeRemoveNodeFromTree removes the given tree node from the tree and also deletes
- * the relevant MD5 file for the parent.
+/* treeRemoveNodeFromTree removes the given tree node from the tree.
  */
 void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 {

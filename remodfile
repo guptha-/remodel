@@ -1,4 +1,5 @@
-DEFAULT <- obj/main.o, obj/md5.o, obj/md5manip.o, obj/remodfile.o, obj/util.o, obj/tree.o, obj/execute.o : "gcc -o bin/remodel -Wall obj/main.o obj/md5.o obj/md5manip.o obj/remodfile.o obj/util.o obj/tree.o obj/execute.o -lm"
+DEFAULT <- bin/remodel
+bin/remodel <- obj/main.o, obj/md5.o, obj/md5manip.o, obj/remodfile.o, obj/util.o, obj/tree.o, obj/execute.o : "gcc -o bin/remodel -Wall obj/main.o obj/md5.o obj/md5manip.o obj/remodfile.o obj/util.o obj/tree.o obj/execute.o -lm"
 obj/md5.o <- src/md5.c, inc/md5.h : "gcc -c src/md5.c -I inc -Wall -g -o obj/md5.o"
 obj/main.o <- src/main.c, inc/defn.h, inc/incl.h, inc/prot.h, inc/md5.h, inc/ds.h :  "gcc -c src/main.c -I inc -Wall -g -o obj/main.o"
 obj/md5manip.o <- src/md5manip.c, inc/defn.h, inc/incl.h, inc/prot.h, inc/md5.h, inc/ds.h :  "gcc -c src/md5manip.c -I inc -Wall -g -o obj/md5manip.o"

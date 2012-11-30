@@ -89,6 +89,8 @@ int md5CalcAndStoreMD5 (char *fileName)
 		tempFilePtr++;
 	}
 	
+	free (command);
+	free (tempFileName);
 	if (md5CalcFileMD5 (fileName, hexDigest) == FAILURE)
 	{
 		free (filePath);
