@@ -159,8 +159,18 @@ int remodfileParseLine (char *prodLine, long lineNum)
 	}
 
 	prodNode = (ProdNode *) malloc (sizeof (ProdNode));
+	if (prodNode == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (prodNode, 0, sizeof (ProdNode));
 	prodNode->command = malloc (strlen (command) + 1);
+	if (prodNode->command == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 
 	strcpy (prodNode->command, command);
 
@@ -168,8 +178,18 @@ int remodfileParseLine (char *prodLine, long lineNum)
 	while (count < targCount)
 	{
 		targNode = (TargNode *) malloc (sizeof (TargNode));
+		if (targNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (targNode, 0, sizeof (TargNode));
 		prodTargNode = (ProdTargNode *) malloc (sizeof (ProdTargNode));
+		if (prodTargNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (prodTargNode, 0, sizeof (ProdTargNode));
 		prodTargNode->node = targNode;
 		prodTargNode->prod = prodNode;
@@ -184,6 +204,11 @@ int remodfileParseLine (char *prodLine, long lineNum)
 			prodNode->targListTail = prodTargNode;
 		}
 		targNode->targPath = malloc (strlen (targName[count]) + 1);
+		if (targNode->targPath == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (targNode->targPath, 0, strlen (targName[count]) + 1);
 		strcpy (targNode->targPath, targName[count]);
 		if (gTargListHead == NULL)
@@ -203,8 +228,18 @@ int remodfileParseLine (char *prodLine, long lineNum)
 	while (count < depCount)
 	{
 		depNode = (DepNode *) malloc (sizeof (DepNode));
+		if (depNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (depNode, 0, sizeof (DepNode));
 		prodDepNode = (ProdDepNode *) malloc (sizeof (ProdDepNode));
+		if (prodDepNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (prodDepNode, 0, sizeof (ProdDepNode));
 		prodDepNode->node = depNode;
 		prodDepNode->prod = prodNode;
@@ -219,6 +254,11 @@ int remodfileParseLine (char *prodLine, long lineNum)
 			prodNode->depListTail = prodDepNode;
 		}
 		depNode->depPath = malloc (strlen (depName[count]) + 1);
+		if (depNode->depPath == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (depNode->depPath, 0, strlen (depName[count]) + 1);
 		strcpy (depNode->depPath, depName[count]);
 		if (gDepListHead == NULL)
@@ -289,6 +329,11 @@ int remodfileProcessRemodfileModif ()
 	char hexDigestNew[16*2+1];
 
 	filePath = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	if (filePath == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (hexDigest, 0, 16*2+1);
 	memset (hexDigestNew, 0, 16*2+1);
 
@@ -320,6 +365,7 @@ int remodfileProcessRemodfileModif ()
 	}
 
 	free (filePath);
+	filePath = NULL;
 	return SUCCESS;
 }
 

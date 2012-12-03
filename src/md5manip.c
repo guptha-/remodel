@@ -10,6 +10,11 @@ int md5DetectFileModif (char *fileName)
 	char hexDigestNew[16*2+1];
 
 	filePath = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	if (filePath == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (hexDigest, 0, 16*2+1);
 	memset (hexDigestNew, 0, 16*2+1);
 
@@ -30,6 +35,7 @@ int md5DetectFileModif (char *fileName)
 	}
 
 	free (filePath);
+	filePath = NULL;
 	return FALSE;
 }
 
@@ -67,8 +73,23 @@ int md5CalcAndStoreMD5 (char *fileName)
 	char *command = NULL;
 
 	filePath = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	if (filePath == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	tempFileName = malloc (strlen (fileName) + strlen (".remodel/") + 1);
+	if (tempFileName == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	command = malloc (strlen (fileName) + strlen (".remodel/") + 256);
+	if (command == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (tempFileName, 0, strlen (fileName) + strlen (".remodel/") + 1);
 	memset (command, 0, strlen (fileName) + strlen (".remodel/") + 256);
 	utilAppendPathToFileName (fileName, filePath);
@@ -90,18 +111,23 @@ int md5CalcAndStoreMD5 (char *fileName)
 	}
 	
 	free (command);
+	command = NULL;
 	free (tempFileName);
+	tempFileName = NULL;
 	if (md5CalcFileMD5 (fileName, hexDigest) == FAILURE)
 	{
 		free (filePath);
+		filePath = NULL;
 		return FAILURE;
 	}
 	if (md5StoreMD5ToFile (filePath, hexDigest) == FAILURE)
 	{
 		free (filePath);
+		filePath = NULL;
 		return FAILURE;
 	}
 	free (filePath);
+	filePath = NULL;
 	return SUCCESS;
 }
 
@@ -145,6 +171,7 @@ int md5CalcFileMD5 (char *fileName, char *hexDigest)
 	md5_finish(&state, digest);
 
 	free (content);
+	content = NULL;
 
 	for (i = 0; i < 16; ++i)
 	{

@@ -26,7 +26,7 @@ void treeRemoveLeafFromTree (TreeLeafNode **Head, TreeLeafNode **Tail,
 				{
 					*Head = (*Head)->next;
 					free (tempTreeList);
-					tempTreeList = *Head;
+					tempTreeList = NULL;
 				}
 			}
 			else
@@ -42,7 +42,7 @@ void treeRemoveLeafFromTree (TreeLeafNode **Head, TreeLeafNode **Tail,
 				{
 					prevTreeListNode->next = tempTreeList->next;
 					free (tempTreeList);
-					tempTreeList = prevTreeListNode->next;
+					tempTreeList = NULL;
 				}
 			}
 		}
@@ -195,6 +195,11 @@ void treeBuildLeafList (TreeDepNode *treeDepNode, TreeLeafNode **treeLeafHead,
 	{
 		/* This is a leaf node. Add it to the list. */
 		treeLeafNode = (TreeLeafNode *) malloc (sizeof (TreeLeafNode));
+		if (treeLeafNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (treeLeafNode, 0, sizeof (TreeLeafNode));
 		treeLeafNode->node = treeDepNode;
 		if (*treeLeafHead == NULL)
@@ -333,6 +338,11 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 		if (tempTreeDepNode == NULL)
 		{
 			tempTreeDepNode = (TreeDepNode *) malloc (sizeof(TreeDepNode));
+			if (tempTreeDepNode == NULL)
+			{
+				printf ("Mem allocation failure\n");
+				exit (EXIT_FAILURE);
+			}
 			memset (tempTreeDepNode, 0, sizeof (TreeDepNode));
 			tempTreeDepNode->node = prodDepNode->node;
 			tempTreeDepNode->dispatchStatus = FALSE;
@@ -348,6 +358,11 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 			}
 		}
 		treePredNode = (TreePredNode *) malloc (sizeof(TreePredNode));
+		if (treePredNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (treePredNode, 0, sizeof (TreePredNode));
 		treePredNode->node = treeDepNode;
 		if (tempTreeDepNode->treePredHead == NULL)
@@ -362,6 +377,11 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 		}
 
 		treeSuccNode = (TreeSuccNode *) malloc (sizeof(TreeSuccNode));
+		if (treeSuccNode == NULL)
+		{
+			printf ("Mem allocation failure\n");
+			exit (EXIT_FAILURE);
+		}
 		memset (treeSuccNode, 0, sizeof (TreeSuccNode));
 		treeSuccNode->node = tempTreeDepNode;
 		if (treeDepNode->treeSuccHead == NULL)
@@ -396,11 +416,26 @@ int treeConstructTree (char *argument)
 	 * as it is not anyone's dependency, but for elegance of code, adding the node
 	 * here. */
 	depNode = (DepNode *) malloc (sizeof (DepNode));
+	if (depNode == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (depNode, 0, sizeof (DepNode));
 	treeDepNode = (TreeDepNode *) malloc (sizeof (TreeDepNode));
+	if (treeDepNode == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (treeDepNode, 0, sizeof (TreeDepNode));
 
 	depNode->depPath = malloc (strlen (argument) + 1);
+	if (depNode->depPath == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (depNode->depPath, 0, strlen (argument) + 1);
 	strcpy (depNode->depPath, argument);
 	treeDepNode->node = depNode;

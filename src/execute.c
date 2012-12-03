@@ -36,6 +36,11 @@ int executeStartRemodel ()
 				/* Child */
 				extFileName = malloc (strlen (treeLeafNode->node->node->depPath) +
 						strlen (".remodel/") + 1);
+				if (extFileName == NULL)
+				{
+					printf ("Mem allocation failure\n");
+					exit (EXIT_FAILURE);
+				}
 				utilAppendPathToFileName (treeLeafNode->node->node->depPath, extFileName);
 				doesFileExist = utilFindIfFileExists (treeLeafNode->node->node->depPath);
 				if (doesFileExist == TRUE)
@@ -67,6 +72,12 @@ int executeStartRemodel ()
 								 this node from their lists. */
 							command = malloc (strlen (treePredNode->node->node->depPath) +
 									strlen (".remodel/") + strlen ("rm -f ") + 1);
+							if (command == NULL)
+							{
+								printf ("Mem allocation failure\n");
+								exit (EXIT_FAILURE);
+							}
+
 							memset (command, 0, strlen (treePredNode->node->node->depPath) +
 									strlen (".remodel/") + strlen ("rm -f ") + 1);
 							strcat (command, "rm -f ");
@@ -74,6 +85,7 @@ int executeStartRemodel ()
 							strcat (command, treePredNode->node->node->depPath);
 							system (command);
 							free (command);
+							command = NULL;
 							treePredNode = treePredNode->next;
 						}
 						exit (EXIT_SUCCESS);
@@ -111,6 +123,11 @@ int executeStartRemodel ()
 							 this node from their lists. */
 						command = malloc (strlen (treePredNode->node->node->depPath) +
 								strlen (".remodel/") + strlen ("rm -f ") + 1);
+						if (command == NULL)
+						{
+							printf ("Mem allocation failure\n");
+							exit (EXIT_FAILURE);
+						}
 						memset (command, 0, strlen (treePredNode->node->node->depPath) +
 								strlen (".remodel/") + strlen ("rm -f ") + 1);
 						strcat (command, "rm -f ");
@@ -118,6 +135,7 @@ int executeStartRemodel ()
 						strcat (command, treePredNode->node->node->depPath);
 						system (command);
 						free (command);
+						command = NULL;
 						treePredNode = treePredNode->next;
 					}
 				}

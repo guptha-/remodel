@@ -38,12 +38,18 @@ int utilFileToString (char *fileName, char **content, long *fileSize)
 	*fileSize = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 	*content = malloc(sizeof(char) * *fileSize + 1);
+	if (*content == NULL)
+	{
+		printf ("Mem allocation failure\n");
+		exit (EXIT_FAILURE);
+	}
 	memset (*content, 0, sizeof(char) * *fileSize + 1);
 	result = fread(*content, 1, *fileSize, fp);
 	if (result <= 0)
 	{
 		printf ("utilFileToString: File is empty\n");
 		free (*content);
+		*content = NULL;
 		fclose (fp);
 		return FAILURE;
 	}
