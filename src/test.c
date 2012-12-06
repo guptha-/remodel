@@ -51,8 +51,9 @@ int executeTest10 ()
 	char fileName[256], string[256];
 	memset (fileName, 0, 256);
 	memset (string, 0, 256);
-	system ("mkdir -p obj; mkdir -p bin");
+	system ("mkdir -p obj; mkdir -p bin; mv remodfile remodfiletemp");
 	system ("cp remodfilecomplex remodfile; ./remodel |tee tempfile");
+	system ("mv remodfiletemp remodfile");
 
 	strcpy (fileName, "../test/test_a.o.out");
 	if (isSubstringPresent (fileName) == FALSE)
