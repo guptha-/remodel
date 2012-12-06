@@ -45,6 +45,60 @@ int isSubstringPresent (char *infileName)
 	return TRUE;
 }
 
+int executeTest10 ()
+{
+	/* See if everything compiles when the remodfile is modified. */
+	char fileName[256], string[256];
+	memset (fileName, 0, 256);
+	memset (string, 0, 256);
+	system ("mkdir -p obj; mkdir -p bin");
+	system ("cp remodfilecomplex remodfile; ./remodel |tee tempfile");
+
+	strcpy (fileName, "../test/test_a.o.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+
+	strcpy (fileName, "../test/test_b.o.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+
+	strcpy (fileName, "../test/test_c.o.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+
+	strcpy (fileName, "../test/test_d.o.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+
+	strcpy (fileName, "../test/test_e.o.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+
+	strcpy (fileName, "../test/test_baz.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+
+	strcpy (fileName, "../test/test_caz.out");
+	if (isSubstringPresent (fileName) == FALSE)
+	{
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+
+
 int executeTest9 ()
 {
 	/* See if it works with caz removed. */
@@ -615,6 +669,15 @@ int main ()
 	else
 	{
 		printf ("TestCase 9 passed\n");
+	}
+
+	if (executeTest10 () == FAILURE)
+	{
+		printf ("TestCase 10 failed\n");
+	}
+	else
+	{
+		printf ("TestCase 10 passed\n");
 	}
 
 	system ("rm -f tempfile tempfile1");
