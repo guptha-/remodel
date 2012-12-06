@@ -1,0 +1,1 @@
+Executed command gcc -c src/e.c -o obj/e.o

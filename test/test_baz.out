@@ -1,0 +1,1 @@
+Executed command gcc obj/a.o obj/b.o -o bin/baz

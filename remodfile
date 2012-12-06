@@ -7,3 +7,5 @@ obj/remodfile.o <- src/remodfile.c, inc/defn.h, inc/incl.h, inc/prot.h, inc/md5.
 obj/util.o <- src/util.c, inc/defn.h, inc/incl.h, inc/prot.h, inc/md5.h, inc/ds.h :  "gcc -c src/util.c -I inc -Wall -g -o obj/util.o"
 obj/tree.o <- src/tree.c, inc/defn.h, inc/incl.h, inc/prot.h, inc/md5.h, inc/ds.h :  "gcc -c src/tree.c -I inc -Wall -g -o obj/tree.o"
 obj/execute.o <- src/execute.c, inc/defn.h, inc/incl.h, inc/prot.h, inc/md5.h, inc/ds.h :  "gcc -c src/execute.c -I inc -Wall -g -o obj/execute.o"
+test <- bin/test.exe
+bin/test.exe <- src/test.c : "gcc -o bin/test.exe -g -Wall src/test.c"

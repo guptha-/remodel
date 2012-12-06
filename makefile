@@ -61,3 +61,6 @@ obj/execute.o: src/execute.c $(INC)
 clean:
 	rm -rf bin/remodel
 	rm -rf obj/*
+
+test: src/test.c
+	gcc -o bin/test.exe -g -Wall src/test.c
