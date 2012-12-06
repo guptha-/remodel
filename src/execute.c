@@ -1,5 +1,5 @@
 #include "../inc/incl.h"
-
+#include <errno.h>
 /* startRemodel starts off the remodeling of the tree structure.
  */
 int executeStartRemodel ()
@@ -27,6 +27,11 @@ int executeStartRemodel ()
 		{
 			if (treeLeafNode->node->dispatchStatus == TRUE)
 			{
+				if (processID == -1)
+				{
+					printf ("executeStartRemodel: No child process, but something dispatched\n");
+					exit (EXIT_FAILURE);
+				}
 				treeLeafNode = treeLeafNode->next;
 				continue;
 			}
@@ -153,7 +158,6 @@ int executeStartRemodel ()
 		}
 		if ((processID = wait (&stat_loc)) != -1)
 		{
-			/* A child has terminated. */
 			if (stat_loc != 0)
 			{
 				printf ("Child terminated abnormally\n");

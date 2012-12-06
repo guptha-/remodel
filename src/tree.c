@@ -58,113 +58,173 @@ void treeRemoveLeafFromTree (TreeLeafNode **Head, TreeLeafNode **Tail,
  */
 void treeRemoveNodeFromTree (TreeLeafNode *treeLeafNode)
 {
-	TreeDepNode *treeDepNode = treeLeafNode->node;
-	TreeDepNode *treeDepListNode = NULL;
-	TreeDepNode *prevTreeDepListNode = NULL;
-	TreePredNode *treePredNode = treeDepNode->treePredHead;
+	TreeDepNode *treeDepNode = NULL;
+	TreeDepNode *prevTreeDepNode = NULL;
+	TreeDepNode *tempTreeDepNode = NULL;
+	TreePredNode *treePredNode = NULL;
+	TreePredNode *tempTreePredNode = NULL;
 	TreeSuccNode *treeSuccNode = NULL;
 	TreeSuccNode *prevTreeSuccNode = NULL;
 
+	if (treeLeafNode == NULL)
+	{
+		printf ("treeRemoveNodeFromTree: Cannot remove non-existant node\n");
+		return;
+	}
+
+	treeDepNode = (TreeDepNode *) malloc (sizeof (TreeDepNode));
+	
+	if (treeDepNode == NULL)
+	{
+		printf ("treeRemoveNodeFromTree: Cannot allocate memory\n");
+		exit (EXIT_FAILURE);
+	}
+
+	if (treeLeafNode->node == NULL)
+	{
+		printf ("treeRemoveNodeFromTree: Cannot remove non-existant node\n");
+		free (treeDepNode);
+		return;
+	}
+
+	memcpy (treeDepNode, treeLeafNode->node, sizeof (TreeDepNode));
+
+	/* If this is not the leaf node, deletion is not permitted. */
+	if (treeDepNode->treeSuccHead != NULL)
+	{
+		printf ("treeRemoveNodeFromTree: This is a leaf node. Cannot delete. "
+						"Exiting because something went irrevocably wrong.\n");
+		free (treeDepNode);
+		exit (EXIT_FAILURE);
+	}
+
+	treePredNode = treeDepNode->treePredHead;
 	while (treePredNode != NULL)
 	{
+		/* Making sure that references to the current node are removed from the 
+		 * predecessors.
+		 */
+		prevTreeSuccNode = NULL;
 		treeSuccNode = treePredNode->node->treeSuccHead;
 		while (treeSuccNode != NULL)
 		{
-			if (strcmp (treeSuccNode->node->node->depPath, treeDepNode->node->depPath) 
-				  == 0)
+			if (strcmp (treeSuccNode->node->node->depPath, treeDepNode->node->depPath)
+					== 0)
 			{
-				if (prevTreeSuccNode == NULL)
+				/* From the list of successors of the predecessor node, we have found
+				 * the required node.
+				 */
+				if ((treeSuccNode == treePredNode->node->treeSuccHead) &&
+						(treeSuccNode == treePredNode->node->treeSuccTail))
 				{
-					if (treePredNode->node->treeSuccHead == treePredNode->node->treeSuccTail)
-					{
-						free (treePredNode->node->treeSuccHead);
-						treePredNode->node->treeSuccHead = NULL;
-						treePredNode->node->treeSuccTail = NULL;
-						treeSuccNode = NULL;
-					}
-					else
-					{
-						treePredNode->node->treeSuccHead = 
-														treePredNode->node->treeSuccHead->next;
-						free (treeSuccNode);
-						treeSuccNode = NULL;
-					}
+					/* This is the only successor node in the predecessor's successor
+					 * list.
+					 */
+					treePredNode->node->treeSuccHead = NULL;
+					treePredNode->node->treeSuccTail = NULL;
+					free (treeSuccNode);
+					treeSuccNode = NULL; /* Exit condition. */
+				}
+				else if (treeSuccNode == treePredNode->node->treeSuccHead)
+				{
+					/* This node is at the head of the list. */
+					treePredNode->node->treeSuccHead = treeSuccNode->next;
+					free (treeSuccNode);
+					treeSuccNode = treePredNode->node->treeSuccHead;
+				}
+				else if (treeSuccNode == treePredNode->node->treeSuccTail)
+				{
+					/* This node is at the tail of the list. */
+					treePredNode->node->treeSuccTail = prevTreeSuccNode;
+					treePredNode->node->treeSuccTail->next = NULL;
+					free (treeSuccNode);
+					treeSuccNode = NULL;
 				}
 				else
 				{
-					if (treeSuccNode->next == NULL)
-					{
-						treePredNode->node->treeSuccTail = prevTreeSuccNode;
-						prevTreeSuccNode->next = NULL;
-						free (treeSuccNode);
-						treeSuccNode = NULL;
-					}
-					else
-					{
-						prevTreeSuccNode->next = treeSuccNode->next;
-						free (treeSuccNode);
-						treeSuccNode = NULL;
-					}
+					/* This is an intermediate node. */
+					prevTreeSuccNode->next = treeSuccNode->next;
+					free (treeSuccNode);
+					treeSuccNode = prevTreeSuccNode->next;
 				}
 			}
 			else
 			{
+				/* This is not the one. Move on. */
 				prevTreeSuccNode = treeSuccNode;
 				treeSuccNode = treeSuccNode->next;
 			}
-		}
+		} /* End scan of one predecessor's successor list. */
 
 		treePredNode = treePredNode->next;
 	}
 
-	treeDepListNode = gTreeDepListHead;
-	while (treeDepListNode != NULL)
+	tempTreePredNode = NULL;
+	treePredNode = treeDepNode->treePredHead;
+	while (treePredNode != NULL)
 	{
-		if (strcmp (treeDepListNode->node->depPath, treeDepNode->node->depPath) 
+		/* Removing all the pred nodes from the current node. */
+		tempTreePredNode = treePredNode->next;
+		free (treePredNode);
+		treePredNode = tempTreePredNode;
+	}
+
+	treeDepNode->treePredHead = NULL;
+	treeDepNode->treePredTail = NULL;
+
+	prevTreeDepNode = NULL;
+	tempTreeDepNode = gTreeDepListHead;
+
+	while (tempTreeDepNode != NULL)
+	{
+		if (strcmp (tempTreeDepNode->node->depPath, treeDepNode->node->depPath)
 				== 0)
 		{
-			if (prevTreeDepListNode == NULL)
+			/* We have found the desired treeDepNode from the list. */
+			if ((tempTreeDepNode == gTreeDepListHead) &&
+					(tempTreeDepNode == gTreeDepListTail))
 			{
-				if (gTreeDepListHead == gTreeDepListTail)
-				{
-					free (gTreeDepListHead);
-					gTreeDepListHead = NULL;
-					gTreeDepListTail = NULL;
-					treeDepListNode = NULL;
-				}
-				else
-				{
-					gTreeDepListHead = gTreeDepListHead->next;
-					free (treeDepListNode);
-					treeDepListNode = NULL;
-				}
+				 /* This is the only node in the TreeDepList*/
+				gTreeDepListHead = NULL;
+				gTreeDepListTail = NULL;
+				free (tempTreeDepNode);
+				tempTreeDepNode = NULL; /* Exit condition. */
+			}
+			else if (tempTreeDepNode == gTreeDepListHead)
+			{
+				/* This node is at the head of the list. */
+				gTreeDepListHead = tempTreeDepNode->next;
+				free (tempTreeDepNode);
+				tempTreeDepNode = gTreeDepListHead;
+			}
+			else if (tempTreeDepNode == gTreeDepListTail)
+			{
+				/* This node is at the tail of the list. */
+				gTreeDepListTail = prevTreeDepNode;
+				gTreeDepListTail->next = NULL;
+				free (tempTreeDepNode);
+				tempTreeDepNode = NULL;
 			}
 			else
 			{
-				if (treeDepListNode->next == NULL)
-				{
-					gTreeDepListTail = prevTreeDepListNode;
-					prevTreeDepListNode->next = NULL;
-					free (treeDepListNode);
-					treeDepListNode = NULL;
-				}
-				else
-				{
-					prevTreeDepListNode->next = treeDepListNode->next;
-					free (treeDepListNode);
-					treeDepListNode = NULL;
-				}
+				/* This is an intermediate node. */
+				prevTreeDepNode->next = tempTreeDepNode->next;
+				free (tempTreeDepNode);
+				tempTreeDepNode = prevTreeDepNode->next;
 			}
 		}
 		else
 		{
-			prevTreeDepListNode = treeDepListNode;
-			treeDepListNode = treeDepListNode->next;
+			/* This is not the one. Move on. */
+			prevTreeDepNode = tempTreeDepNode;
+			tempTreeDepNode = tempTreeDepNode->next;
 		}
-	}
+	} /* End scan global TreeDepList */
+	
+	/* We do not remove depNode, prodNode or targNodes from their resp. lists. */
+	free (treeDepNode);
 }
 
-	
 /* treeLocateTreeLeafFromPID locates the tree leaf node from the embedded process
  * ID.
  */
@@ -189,7 +249,23 @@ void treeBuildLeafList (TreeDepNode *treeDepNode, TreeLeafNode **treeLeafHead,
                         TreeLeafNode **treeLeafTail)
 {
 	TreeLeafNode *treeLeafNode = NULL;
-	TreeSuccNode *treeSuccNode = treeDepNode->treeSuccHead;
+	TreeSuccNode *treeSuccNode = NULL;
+	TreeLeafNode *treeTempLeafNode = *treeLeafHead;
+	
+	while (treeTempLeafNode != NULL)
+	{
+		if (treeTempLeafNode->node == treeDepNode)
+		{
+			/* Node already exists in leaf list. */
+			return;
+		}
+		treeTempLeafNode = treeTempLeafNode->next;
+	}
+	if ((treeDepNode == NULL) || (treeDepNode->node == NULL))
+	{
+		return;
+	}
+	treeSuccNode = treeDepNode->treeSuccHead;
 
 	if ((treeSuccNode == NULL) && (treeDepNode->dispatchStatus == FALSE))
 	{
@@ -331,7 +407,7 @@ int treeAddSuccessors (TreeDepNode *treeDepNode)
 
 	/* At this point, there are dependencies. */
 	prodDepNode = prodNode->depListHead;
-	while (prodDepNode != NULL)
+	while ((prodDepNode != NULL) && (prodDepNode->node != NULL))
 	{
 		/* Ensuring that there is only one tree dep node for each dep */
 		treeLocateTreeDepNode (prodDepNode->node, &tempTreeDepNode);
