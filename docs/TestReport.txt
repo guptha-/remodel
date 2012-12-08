@@ -1,0 +1,50 @@
+Executed command gcc -c src/e.c -o obj/e.o
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc -c src/b.c -o obj/b.o
+Executed command gcc -c src/c.c -o obj/c.o
+Executed command gcc -c src/a.c -o obj/a.o
+Executed command gcc obj/a.o obj/b.o -o bin/baz
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc -c src/c.c -o obj/c.o
+Executed command gcc -c src/e.c -o obj/e.o
+Executed command gcc -c src/b.c -o obj/b.o
+Executed command gcc -c src/a.c -o obj/a.o
+Executed command gcc obj/a.o obj/b.o -o bin/baz
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/b.c -o obj/b.o
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc -c src/c.c -o obj/c.o
+Executed command gcc -c src/e.c -o obj/e.o
+Executed command gcc -c src/a.c -o obj/a.o
+Executed command gcc obj/a.o obj/b.o -o bin/baz
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/a.c -o obj/a.o
+Executed command gcc obj/a.o obj/b.o -o bin/baz
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/b.c -o obj/b.o
+Executed command gcc obj/a.o obj/b.o -o bin/baz
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+Executed command gcc -c src/b.c -o obj/b.o
+Executed command gcc -c src/d.c -o obj/d.o
+Executed command gcc -c src/c.c -o obj/c.o
+Executed command gcc -c src/e.c -o obj/e.o
+Executed command gcc -c src/a.c -o obj/a.o
+Executed command gcc obj/a.o obj/b.o -o bin/baz
+Executed command gcc obj/a.o obj/c.o obj/d.o obj/e.o -o bin/caz
+TestCase 1 passed
+TestCase 2 passed
+TestCase 3 passed
+TestCase 4 passed
+TestCase 5 passed
+TestCase 6 passed
+TestCase 7 passed
+TestCase 8 passed
+TestCase 9 passed
+TestCase 10 passed
